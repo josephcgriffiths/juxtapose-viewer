@@ -4,22 +4,27 @@
   <meta charset="UTF-8">
   <title>Multi-Image Juxtapose</title>
   <style>
-    body, html {
+    html, body {
       margin: 0;
       padding: 0;
-      background: #f0f0f0;
-      font-family: sans-serif;
+      height: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
-      height: 100%;
+      background: #f0f0f0;
+      font-family: sans-serif;
     }
 
     .wrapper {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 10px;
+    }
+
+    .content-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .container {
@@ -27,8 +32,8 @@
       width: 600px;
       height: 400px;
       overflow: hidden;
-      box-shadow: 0 0 10px rgba(0,0,0,0.3);
       background: #000;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
     }
 
     .image {
@@ -56,35 +61,100 @@
       z-index: 2;
     }
 
+    /* Date Labels */
+    .label {
+      position: absolute;
+      background: rgba(0, 0, 0, 0.6);
+      color: white;
+      font-size: 14px;
+      padding: 4px 8px;
+      border-radius: 4px;
+      opacity: 0.8;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    .top-left     { top: 8px; left: 8px; }
+    .top-right    { top: 8px; right: 8px; }
+    .bottom-left  { bottom: 8px; left: 8px; }
+    .bottom-right { bottom: 8px; right: 8px; }
+
+    /* Slider styles */
     .slider {
+      appearance: none;
+      background: red;
+      border-radius: 4px;
+      outline: none;
       z-index: 5;
+    }
+
+    .slider::-webkit-slider-thumb {
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: white;
+      cursor: pointer;
+      border: 1px solid #aaa;
+      box-shadow: 0 0 2px rgba(0,0,0,0.5);
+    }
+
+    .slider::-moz-range-thumb,
+    .slider::-ms-thumb {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: white;
+      cursor: pointer;
+      border: 1px solid #aaa;
     }
 
     .horizontal-slider {
       width: 600px;
+      height: 8px;
+      margin-top: 10px;
+    }
+
+    .vertical-slider-wrapper {
+      height: 400px;
+      width: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: 10px;
     }
 
     .vertical-slider {
-      position: absolute;
-      right: -25px;
-      top: 0;
-      height: 100%;
-      writing-mode: lr-tb;
       transform: rotate(90deg);
+      transform-origin: center center;
+      width: 400px;
+      height: 8px;
     }
   </style>
 </head>
 <body>
   <div class="wrapper">
-    <div class="container" id="juxtapose-container">
-      <img src="S1.png" class="image base" alt="Image 4">
-      <img src="S2.png" class="image vertical" alt="Image 3">
-      <img src="S3.png" class="image horizontal" alt="Image 2">
-      <img src="S1.png" class="image top" alt="Image 1">
+    <div class="content-row">
+      <div class="container" id="juxtapose-container">
+        <img src="static/S1.png" class="image base" alt="Image 4">
+        <img src="static/S2.png" class="image vertical" alt="Image 3">
+        <img src="static/S3.png" class="image horizontal" alt="Image 2">
+        <img src="static/S1.png" class="image top" alt="Image 1">
 
-      <input type="range" min="0" max="100" value="50" class="slider vertical-slider" id="vSlider">
+        <!-- Labels -->
+        <div class="label top-left">May 2024</div>
+        <div class="label bottom-left">January 2025</div>
+        <div class="label top-right">March 2025</div>
+        <div class="label bottom-right">April 2025</div>
+      </div>
+
+      <!-- Vertical slider -->
+      <div class="vertical-slider-wrapper">
+        <input type="range" min="0" max="100" value="50" class="slider vertical-slider" id="vSlider">
+      </div>
     </div>
 
+    <!-- Horizontal slider -->
     <input type="range" min="0" max="100" value="50" class="slider horizontal-slider" id="hSlider">
   </div>
 
@@ -96,7 +166,6 @@
     function updateClipPaths() {
       const hVal = hSlider.value + '%';
       const vVal = vSlider.value + '%';
-
       container.style.setProperty('--hVal', hVal);
       container.style.setProperty('--vVal', vVal);
     }
